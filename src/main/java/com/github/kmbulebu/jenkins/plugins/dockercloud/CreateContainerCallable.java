@@ -149,9 +149,13 @@ public class CreateContainerCallable implements Callable<Node> {
 	
 	/*
 	 *  Get a Jenkins Base URL ending with /
+	 *  If one was not configured, fall back to a default value
 	 */
 	private String getJenkinsBaseUrl() {
-		String url = JenkinsLocationConfiguration.get().getUrl();
+		String url = dockerImage.getJenkinsBuildMasterURL();
+		if (url == null && url.isEmpty()) {
+			url = JenkinsLocationConfiguration.get().getUrl();
+		}
 		if (url.endsWith("/")) {
 			return url;
 		} else {

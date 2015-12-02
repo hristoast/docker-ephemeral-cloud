@@ -24,7 +24,8 @@ import jenkins.model.Jenkins;
  * @author Kevin Bulebush (kmbulebu@gmail.com)
  */
 public class DockerImage implements Describable<DockerImage> {
-	
+
+	private String jenkinsBuildMasterUrl;
 	private String name;
 	private String labelString;
 	private Node.Mode mode;
@@ -56,10 +57,11 @@ public class DockerImage implements Describable<DockerImage> {
 	// volumes
 	
 	@DataBoundConstructor
-	public DockerImage(String name, String labelString, Node.Mode mode, String instanceCapStr, String dockerImageName, 
-			String remoteFS, boolean pullForced, boolean pullDisabled, String userOverride, long cpuShares,
-			boolean memoryLimited, long memoryLimitMB, boolean swapLimited, long swapLimitMB, boolean privileged,
-			String workingDir, List<? extends NodeProperty<?>> nodeProperties) throws IOException {
+	public DockerImage(String jenkinsBuildMasterUrl, String name, String labelString, Node.Mode mode, String instanceCapStr,
+		    String dockerImageName, String remoteFS, boolean pullForced, boolean pullDisabled, String userOverride,
+			long cpuShares, boolean memoryLimited, long memoryLimitMB, boolean swapLimited, long swapLimitMB,
+			boolean privileged, String workingDir, List<? extends NodeProperty<?>> nodeProperties) throws IOException {
+		this.jenkinsBuildMasterUrl = jenkinsBuildMasterUrl;
 		this.name = name;
 		this.labelString = labelString;
 		this.mode = mode;
@@ -89,7 +91,16 @@ public class DockerImage implements Describable<DockerImage> {
 		
 		this.nodeProperties.replaceBy(nodeProperties);
 	}
-	
+
+	public String getJenkinsBuildMasterURL() {
+		return jenkinsBuildMasterUrl;
+	}
+
+	@DataBoundSetter
+	public void setJenkinsBuildMasterURL(String jenkinsBuildMasterUrl) {
+		this.jenkinsBuildMasterUrl = jenkinsBuildMasterUrl;
+	}
+
 	public String getName() {
 		return name;
 	}
