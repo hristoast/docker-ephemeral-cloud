@@ -44,7 +44,7 @@ public class DockerImage implements Describable<DockerImage> {
 	private long swapLimitMB;
 	private boolean privileged;
 	private String workingDir;
-	private String[] volumes;
+	// private String[] volumes;
 	
 	private DescribableList<NodeProperty<?>,NodePropertyDescriptor> nodeProperties = new DescribableList<NodeProperty<?>,NodePropertyDescriptor>(Hudson.getInstance());
 

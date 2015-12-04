@@ -84,8 +84,6 @@ public class CreateContainerCallable implements Callable<Node> {
 		final String slaveOptions = "-jnlpUrl " + getSlaveJnlpUrl(slave) + " -secret " + getSlaveSecret(slave) + " " + additionalSlaveOptions;
 		final String[] command = new String[] {"sh", "-c", "curl -o slave.jar " + getSlaveJarUrl() + " && java -jar slave.jar " + slaveOptions};
 		final ContainerConfig.Builder containerConfigBuilder = ContainerConfig.builder().image(dockerImage.getDockerImageName()).cmd(command);
-			// .volumes(dockerImage.getVolumes()).cmd(command);  // TODO: dont do this here?
-			// .volumes("/usr/local/bin/docker", "/var/run/docker.sock").cmd(command);
 		final HostConfig.Builder hostConfigBuilder = HostConfig.builder();
 		
 		// Check for User override.
@@ -117,11 +115,13 @@ public class CreateContainerCallable implements Callable<Node> {
 		}
 
 		// Setup volumes
-		if (dockerImage.getVolumes() != null && !dockerImage.getVolumes().isEmpty()) {
-			// TODO: look up containerConfigBuilder, is this where i want to set the volumes??!?
-			LOGGER.info("############################## TESTING volumes: " + dockerImage.getVolumes());
-			containerConfigBuilder.volumes(dockerImage.getVolumes());
-		}
+		// if (dockerImage.getVolumes() != null && !dockerImage.getVolumes().isEmpty()) {
+		// 	// TODO: look up containerConfigBuilder, is this where i want to set the volumes??!?
+		// 	LOGGER.info("############################## TESTING volumes: " + dockerImage.getVolumes());
+		// 	containerConfigBuilder.volumes(dockerImage.getVolumes());
+		// }
+		// TODO: dont hard code this
+		hostConfigBuilder.binds("/usr/local/bin/docker:/usr/local/bin/docker", "/var/run/docker.sock:/var/run/docker.sock");
 		
 		// Set privileged if requested.
 		hostConfigBuilder.privileged(dockerImage.isPrivileged());
