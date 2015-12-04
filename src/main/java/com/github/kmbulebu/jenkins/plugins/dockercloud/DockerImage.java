@@ -44,6 +44,7 @@ public class DockerImage implements Describable<DockerImage> {
 	private long swapLimitMB;
 	private boolean privileged;
 	private String workingDir;
+	private String[] volumes;
 	
 	private DescribableList<NodeProperty<?>,NodePropertyDescriptor> nodeProperties = new DescribableList<NodeProperty<?>,NodePropertyDescriptor>(Hudson.getInstance());
 
@@ -60,7 +61,8 @@ public class DockerImage implements Describable<DockerImage> {
 	public DockerImage(String jenkinsBuildMasterUrl, String name, String labelString, Node.Mode mode, String instanceCapStr,
 		    String dockerImageName, String remoteFS, boolean pullForced, boolean pullDisabled, String userOverride,
 			long cpuShares, boolean memoryLimited, long memoryLimitMB, boolean swapLimited, long swapLimitMB,
-			boolean privileged, String workingDir, List<? extends NodeProperty<?>> nodeProperties) throws IOException {
+			boolean privileged, String workingDir, String[] volumes, List<? extends NodeProperty<?>> nodeProperties)
+		throws IOException {
 		this.jenkinsBuildMasterUrl = jenkinsBuildMasterUrl;
 		this.name = name;
 		this.labelString = labelString;
@@ -82,6 +84,8 @@ public class DockerImage implements Describable<DockerImage> {
 		this.privileged = privileged;
 		
 		this.workingDir = workingDir;
+
+		this.volumes = volumes;
 		
 		if (instanceCapStr == null || "".equals(instanceCapStr)) {
 			instanceCap = Integer.MAX_VALUE;
@@ -243,6 +247,16 @@ public class DockerImage implements Describable<DockerImage> {
 	@DataBoundSetter
 	public void setWorkingDir(String workingDir) {
 		this.workingDir = workingDir;
+	}
+
+	public String getVolumes() {
+		// TODO: do we need any sanitization?
+		return volumes;
+	}
+
+	@DataBoundSetter
+	public void setVolumes(String volumes) {
+		this.volumes = volumes;
 	}
 
 	@Override
